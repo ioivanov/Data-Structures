@@ -5,4 +5,4 @@
 * `bool get(int i) const`
 
 
-и предефинирайте оператора за вход `ostream& operator<<(ostream&, Bitwise const&)`, като използвате вече дефинираните методи.
+и предефинирайте оператора за изход `ostream& operator<<(ostream&, Bitwise const&)`, като използвате вече дефинираните методи.
