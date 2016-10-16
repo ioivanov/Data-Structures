@@ -22,7 +22,7 @@ public:
 	bool empty() const;
 
 	// намиране на елемента на върха на стека
-	int peek() const;
+	int top() const;
 
 	// мутатори
 
