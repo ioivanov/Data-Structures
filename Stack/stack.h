@@ -6,7 +6,7 @@ int const MAX = 100;
 class Stack {
 private:
 	int a[MAX];	// елементите на стека
-	int top;	// индекс на последния елемент
+	int topIndex;	// индекс на последния елемент
 
 	// проверка дали стек е пълен
 	bool full() const;
