@@ -6,11 +6,11 @@ using namespace std;
 int const EMPTY_STACK = -1; // отбелязваме празен стек
 
 Stack::Stack() {
-	top = EMPTY_STACK;
+	topIndex = EMPTY_STACK;
 }
 
 bool Stack::empty() const {
-	return top == EMPTY_STACK;
+	return topIndex == EMPTY_STACK;
 }
 
 int Stack::top() const {
@@ -19,18 +19,18 @@ int Stack::top() const {
 		return 0;
 	}
 
-	return a[top];
+	return a[topIndex];
 }
 
 void Stack::push(int const& x) {
 	if (full()) {
 		cout << "Грешка: опит за включване в пълен стек!\n";
 	} else
-		a[++top] = x;
+		a[++topIndex] = x;
 }
 
 bool Stack::full() const {
-	return top == MAX - 1;
+	return topIndex == MAX - 1;
 }
 
 int Stack::pop() {
@@ -38,5 +38,5 @@ int Stack::pop() {
 		cout << "Грешка: опит за изключване от празен стек!\n";
 		return 0;
 	}
-	return a[top--];
+	return a[topIndex--];
 }
