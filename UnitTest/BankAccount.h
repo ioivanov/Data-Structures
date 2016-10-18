@@ -1,3 +1,4 @@
+#pragma once
 #include "string"
 #include <exception>
 
@@ -33,5 +34,10 @@ struct BankAccount
 			balance -= ammount;
 		else
 			throw std::out_of_range("Negative ammount.");
+	}
+
+	bool empty() const
+	{
+		return balance == 0;
 	}
 };
