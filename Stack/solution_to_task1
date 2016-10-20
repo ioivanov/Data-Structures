@@ -1,0 +1,82 @@
+#include "stdafx.h"
+#include "stack.hpp"
+#include <fstream>
+
+char brakets[4][2] =
+{
+	{ '(', ')', },
+	{ '[', ']' },
+	{ '<', '>' },
+	{ '{', '}' }
+};
+
+bool balancedParentheses(char* sourceFileName)
+{
+	std::ifstream fi(sourceFileName);
+	Stack<char> stk;
+	int i = 0;
+	char c;
+	bool result = true;
+	while (fi>>c && result)
+	{
+		for (int j = 0; j < 4; ++j)
+		{
+			if (c == brakets[j][0])
+			{
+				stk.push(c);
+			}
+			else if (c == brakets[j][1])
+			{
+				if (stk.top() == brakets[j][0])
+					stk.pop();
+				else
+					result = false;
+			}
+		}
+		++i;
+	}
+	if (!stk.empty())
+		result = false;
+	fi.close();
+	return result;
+}
+
+void indexOfParentheses(char* sourceFileName, char* destinationFileName)
+{
+	std::ifstream fi(sourceFileName);
+	std::ofstream fo(destinationFileName, std::ios::trunc);
+	int positionInExpr = 0;
+	int positionOnArr = 0;
+	int result[100];
+	Stack<std::pair<int, int>> index;
+	char c;
+	while(fi>>c)
+	{
+		if(c=='('|| c == '<' || c == '[' || c == '{')
+		{
+			index.push(std::pair<int, int>(positionOnArr, positionInExpr));
+			positionOnArr += 2;
+		}
+		else if(c == ')' || c == '>' || c == ']' || c == '}')
+		{
+			std::pair<int, int> p = index.top();
+			result[p.first] = p.second;
+			result[p.first + 1] = positionInExpr;
+			index.pop();
+		}
+		positionInExpr++;
+	}
+	for (int i = 0; i < positionOnArr; i += 2)
+	{
+		fo << '(' << result[i] << ':' << result[i + 1] << ')';
+	}
+	fo.close();
+	fi.close();
+}
+
+int main()
+{
+	//std::cout<<balancedParentheses("expr.txt");
+	indexOfParentheses("expr.txt", "results.txt");
+    return 0;
+}
