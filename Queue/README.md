@@ -18,12 +18,30 @@
 * `n` реда, като всеки ред е във вида `name` `gender` - съответно името и пола на студента.
 
 Пример:
+
+
 7
+
+
 Anastas m
+
+
 Geogri M
+
+
 Maria F
+
+
 Rosen M
+
+
 Hristo M
+
+
 Strahil M
+
+
 Nikolina F
+
+
 // -> Maria Anastas Nikolina Georgi Rosen Hristo Strahil
