@@ -198,7 +198,7 @@ public:
 	}
 
 	// O(1)
-	void append(LinkedList<T>& l2) 
+	void append(LinkedList<T>& l2) {
 		if (empty())
 			front = l2.front;
 		else
