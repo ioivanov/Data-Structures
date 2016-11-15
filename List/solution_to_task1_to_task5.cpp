@@ -47,7 +47,7 @@ void merge(List<T, I> const& l1, List<T, I> const& l2, List<T, I>& l) {
 		l.insertEnd(*i2++);
 }
 
-
+typedef DoubleLinkedList<int> TestList;
 
 TestList sort(TestList const& l) {
 	if (!++l.begin())
