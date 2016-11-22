@@ -1,4 +1,5 @@
-	t1.addChild(TestTree(2)
+TestTree t1(1);
+t1.addChild(TestTree(2)
 				.addChild(TestTree(3))
 				.addChild(TestTree(4)
 						  .addChild(TestTree(5))
