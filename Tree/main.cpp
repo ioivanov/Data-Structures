@@ -1,4 +1,4 @@
-TestTree t1(1);
+Tree<int> t1(1);
 t1.addChild(TestTree(2)
 				.addChild(TestTree(3))
 				.addChild(TestTree(4)
