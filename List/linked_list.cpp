@@ -177,7 +177,7 @@ public:
 		if (back == toDelete)
 
 			back = it.p;
-		delete toDelete
+		delete toDelete;
 		return true;
 	}
 
