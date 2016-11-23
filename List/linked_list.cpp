@@ -174,7 +174,7 @@ public:
 		E* toDelete = it.p->next;
 		it.p->next = toDelete->next;
 		x = toDelete->data;
-		if (back == toDelet)
+		if (back == toDelete)
 
 			back = it.p;
 		delete toDelete
