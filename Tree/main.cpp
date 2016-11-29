@@ -12,6 +12,40 @@ bool isLeaf(const Tree& tree) {
 	return tree.getSubtrees().empty();
 }
 
+int sumLeafs(Tree const& tree, int& sum)
+{
+	if (isLeaf(tree))
+	{
+		sum += tree.getRoot();
+	}
+	else
+	{
+		for (list<Tree>::const_iterator it = tree.getSubtrees().begin(); it != tree.getSubtrees().end(); it++)
+		{
+			sumLeafs(*it, sum);
+		}
+	}
+	return sum;
+}
+
+int sumLeafs2(Tree const& tree)
+{
+	int sum = 0;
+	if (isLeaf(tree))
+	{
+		sum += tree.getRoot();
+		return sum;
+	}
+	else
+	{
+		for (list<Tree>::const_iterator it = tree.getSubtrees().begin(); it != tree.getSubtrees().end(); it++)
+		{
+			sum += sumLeafs2(*it);
+		}
+	}
+	return sum;
+}
+
 void DFS(const Tree& tree) {
 	// обработваме корена
 	cout << tree.getRoot() << ' ';
@@ -48,6 +82,34 @@ void BFS(Tree const& tree)
 		//махаме корена - dequeue
 		q.pop();
 	}
+}
+
+int depth(Tree const& t, int& currLen, int& maxLen)
+{
+	if (isLeaf(t))
+	{
+		if (currLen > maxLen)
+			maxLen = currLen;
+	}
+	currLen++;
+
+	for (list<Tree>::const_iterator it = t.getSubtrees().begin(); it != t.getSubtrees().end(); ++it) {
+		depth(*it, currLen, maxLen);
+		
+	}
+	currLen--;
+
+	return maxLen;
+}
+
+void breadth(Tree const& t, int& maxB)
+{
+	int i = 0;
+	for (list<Tree>::const_iterator it = t.getSubtrees().begin(); it != t.getSubtrees().end(); ++it, i++) {
+		breadth(*it, maxB);
+	}
+	if (i > maxB)
+		maxB = i;
 }
 
 
