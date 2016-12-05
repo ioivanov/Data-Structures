@@ -1,12 +1,12 @@
-#include "stdafx.h"
 #include <iostream>
 using namespace std;
 
+//подобно на свързан списък имаме структура възел
 template <typename T>
 struct TreeNode {
-	// стойността в корена
+	//съдържаща данни
 	T data;
-	//ляво и дясно поддърво
+	//указател към ляв и десен възел
 	TreeNode *left, *right;
 
 	TreeNode(T const& _data = T(),
@@ -15,22 +15,76 @@ struct TreeNode {
 		: data(_data), left(_left), right(_right) {}
 };
 
+//тази декларация ни позволява да използваме двоичното 
+//дърво преди да сме го реализирали
+template <typename T>
+class BinaryTree;
+
+//реализираме позиция в дърво като двоен указател
+//това помага за много бързо разместване на поддървета
+template <typename T>
+class BinaryTreePosition {
+private:
+	//представлява указател към указател към дърво
+	TreeNode<T>** p;
+public:
+	BinaryTreePosition(TreeNode<T>*& rp) : p(&rp) {}
+
+	//този оператор позволява конвертирането на
+	//позиция към истина или лъжа
+	operator bool() const {
+		return *p != NULL;
+	}
+
+	//позволява поставянето на отрицание пред позиция
+	bool operator!() const {
+		return *p == NULL;
+	}
+
+	//връща стойността на корена
+	T& operator*() const {
+		return (*p)->data;
+	}
+
+	//прави преместване на дясно ако е възможно
+	BinaryTreePosition operator+() const {
+		if (*p == NULL)
+			return *this;
+		return BinaryTreePosition((*p)->right);
+	}
+
+	//преместване на ляво ако е възможно
+	BinaryTreePosition operator-() const {
+		if (*p == NULL)
+			return *this;
+		return BinaryTreePosition((*p)->left);
+	}
+
+	//позволява достъп на BinaryTree<T> до методите на текущия клас
+	friend class BinaryTree<T>;
+
+};
+
+//двоичното дърво реализираме подобно на свързан списък
 template <typename T>
 class BinaryTree {
 private:
-	//дървото ни представлява указател към корена (аналогия със свързан списък)
+	//указател към корена на дървото
 	TreeNode<T>* r;
-
+	
+	//интересно тук е извеждането на съобщението
+	//това ще ни покаже колко пъти се копира структурата
 	TreeNode<T>* copyNode(TreeNode<T>* n) {
 		if (n == NULL)
 			return n;
-		//cout << "Copying tree" << endl;
-		//за да откопираме дърво първо копираме корена после викаме функцията за ляво и дясно поддърво
+		cout << "Copying tree" << endl;
 		return new TreeNode<T>(n->data, copyNode(n->left),
 			copyNode(n->right));
 	}
 
-	//тъй като всяко дърво е заделено с new първо трием наследниците след това себе си
+	//тъй като всеки възел е заделен с new
+	//трябва първо да изтрием наследниците
+	//и след това текущият възел
 	void eraseNode(TreeNode<T>* n) {
 		if (n != NULL) {
 			eraseNode(n->left);
@@ -46,17 +100,27 @@ private:
 		TreeNode<T>* toDelete = to;
 		// прехвърляме новата стойност
 		to = from;
-		// като я "открадваме", т.е. в дървото, от което вземаме		// нулираме указателя
+		// като я "открадваме", т.е. в дървото, от което вземаме
+		// нулираме указателя
 		from = NULL;
 		// изтриваме старата стойност, за да предотвратим изтичане
 		// на памет
 		eraseNode(toDelete);
 	}
+
+
+public:
+
+	using P = BinaryTreePosition<T>;
+
+protected:
+	//
+	void assignFrom(P to, P from) {
+		assignFrom(*to.p, *from.p);
+	}
+
 public:
 	BinaryTree() : r(NULL) {}
-
-	//конструктор по корен, ляво и дясно дърво
-	//трябва да се подават временни променливи защото използваме assignFrom
 	BinaryTree(T const& x, BinaryTree<T>&& lt = BinaryTree<T>(),
 		BinaryTree<T>&& rt = BinaryTree<T>()) {
 		r = new TreeNode<T>(x);
@@ -79,77 +143,48 @@ public:
 		eraseNode(r);
 	}
 
-	T root() const {
-		if (r == NULL)
-			return T();
-		return r->data;
+	void assignFrom(P pos, BinaryTree<T>&& t) {
+		assignFrom(pos, t.root());
 	}
+
+	void deleteAt(P pos) {
+		TreeNode<T>* tmp = NULL;
+		assignFrom(*pos.p, tmp);
+	}
+
+	P root() {
+		return P(r);
+	}
+
 
 	BinaryTree leftTree() const {
 		return BinaryTree(r->left);
 	}
+
 	BinaryTree rightTree() const {
 		return BinaryTree(r->right);
 	}
+
 	bool empty() const {
 		return r == NULL;
 	}
 
-	friend ostream& operator<<(ostream& os, BinaryTree<T> const& bt) 
-	{
-		if (bt.empty())
-			return os << '.';
-		return os << '(' << bt.root()<< ' ' << bt.leftTree()
-			<< ' ' << bt.rightTree() << ')';
-	}
 };
+
 
 template <typename T>
-class BinaryTreePosition {
-private:
-	//двоен указател за да имаме контрол над наследниците
-	TreeNode<T>** p;
-public:
-	BinaryTreePosition(TreeNode<T>*& rp) : p(&rp) {}
-
-	operator bool() const {
-		return *p != NULL;
-	}
-
-	bool operator!() const {
-		return *p == NULL;
-	}
-
-	T& operator*() const {
-		return (*p)->data;
-	}
-
-	BinaryTreePosition operator+() const {
-		if (*p == NULL)
-			return *this;
-		return BinaryTreePosition((*p)->right);
-	}
-
-	BinaryTreePosition operator-() const {
-		if (*p == NULL)
-			return *this;
-		return BinaryTreePosition((*p)->left);
-	}
-
-	friend class BinaryTree<T>;
-};
-
-/*
-void assignFrom(P pos, BinaryTree<T>&& t) {
-	assignFrom(pos, t.root());
+ostream& operator<<(ostream& os, BinaryTree<T> const& bt) {
+	if (bt.empty())
+		return os << '.';
+	return os << '(' << *bt.root() << ' ' << bt.leftTree()
+		<< ' ' << bt.rightTree() << ')';
 }
 
-void deleteAt(P pos) {
-	TreeNode<T>* tmp = NULL;
-	assignFrom(*pos.p, tmp);
-}
 
-P root() {
-	return P(r);
+template <typename T>
+ostream& operator<<(ostream& os, BinaryTreePosition<T> pos) {
+	if (!pos)
+		return os << '.';
+	return os << '(' << *pos << ' ' << -pos
+		<< ' ' << +pos << ')';
 }
-*/
