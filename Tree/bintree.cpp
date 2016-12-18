@@ -121,6 +121,8 @@ protected:
 
 public:
 	BinaryTree() : r(NULL) {}
+	//&& означава временен обект
+	//може да се срещне само като аргумент на функция
 	BinaryTree(T const& x, BinaryTree<T>&& lt = BinaryTree<T>(),
 		BinaryTree<T>&& rt = BinaryTree<T>()) {
 		r = new TreeNode<T>(x);
