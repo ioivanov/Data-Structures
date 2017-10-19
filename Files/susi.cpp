@@ -16,6 +16,7 @@ void writeStudents(Student* s, int n) {
 	fo << n << endl;
 	for(int i = 0; i < n; i++)
 		fo << s[i];
+	fo.close();
 }
 
 void toMainBook() {
@@ -26,6 +27,8 @@ void toMainBook() {
 	while (fi >> s)
 		if (s.getGrade() >= 3)
 			fo.write((char const*)&s, sizeof(Student));
+	fo.close();
+	fi.close();
 }
 
 void raiseGrade(int fn) {
@@ -38,6 +41,7 @@ void raiseGrade(int fn) {
 			fo.write((char const*)&s, sizeof(Student));
 		}
 	}
+	fo.close();
 }
 
 int main() {
