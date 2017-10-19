@@ -21,8 +21,6 @@ void writeStudents(Student* s, int n) {
 void toMainBook() {
 	ifstream fi("students.txt");
 	ofstream fo("main.bk", ios::out | ios::binary);
-	int n;
-	fi >> n;
 	Student s;
 
 	while (fi >> s)
