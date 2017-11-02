@@ -5,16 +5,18 @@
 #include <iostream>
 using namespace std;
 
+//Свързаната структура представлява верига от кутийки
+//елементите(кутийките) на свързания стек са изградени от:
 template <typename T>
 struct StackElement {
-	T data;
-	StackElement* next;
+	T data; //данните, които се съхраняват в стека (пример: числото 256, или символа 'h')
+	StackElement* next; // указател към следващият елемент (който същот е изграден от данни и указател)
 };
 
 template <typename T>
 class LinkedStack{
 private:
-	StackElement<T>* top;
+	StackElement<T>* top; //самата структура от данни съхранява само указател към края на веригата
 
 public:
 	// създаване на празен стек
@@ -48,7 +50,7 @@ public:
 
 template <typename T>
 LinkedStack<T>::LinkedStack() {
-	top = NULL;
+	top = NULL; //при създаването на нов стек в него няма елементи т.е. веригата е празна
 }
 
 template <typename T>
@@ -68,10 +70,10 @@ T LinkedStack<T>::peek() const {
 
 template <typename T>
 void LinkedStack<T>::push(T const& x) {
-	StackElement<T>* p = new StackElement<T>;
-	p->data = x;
-	p->next = top;
-	top = p;
+	StackElement<T>* p = new StackElement<T>; //първо създаваме нова кутийка
+	p->data = x; //инициализираме данните в зависимост от подадения аргумент
+	p->next = top; //насочваме новия елемент към стария край на веригата
+	top = p; //новия край на веригата е новия елемент
 }
 
 template <typename T>
@@ -81,11 +83,12 @@ T LinkedStack<T>::pop() {
 		return 0;
 	}
 	// top != NULL
-
-	StackElement<T>* p = top;
-	top = top->next;
-	T x = p->data;
-	delete p;
+	
+	//целта тук е да изтрием последния елемент НО не го правим веднага
+	StackElement<T>* p = top; //създаваме указател към последния елемент за да можем да го изтрием
+	top = top->next; //насочваме края на веригата към предпоследния елемент
+	T x = p->data; //връщаме премахнатия елемент (това може и да не се прави)
+	delete p; //изтриваме последния елемент
 	return x;
 }
 
@@ -95,6 +98,7 @@ LinkedStack<T>::~LinkedStack() {
 	 * while (!empty())
 		pop();
 	 */
+	//аналогично на логиката при pop()
 	StackElement<T>* toDelete;
 	while (top != NULL) {
 		toDelete = top;
@@ -107,11 +111,15 @@ LinkedStack<T>::~LinkedStack() {
 template <typename T>
 LinkedStack<T>::LinkedStack(LinkedStack<T> const& ls)
 	: top(NULL) {
+	//това не работи защото не можем да правим ls.pop() при положение, че ls e const
 	/*
 	while (!ls.empty()) {
 		push(ls.pop());
 	}
 	*/
+		
+	//хубав начин за обхождане на елементите на свързана структура без разрушаването ѝ
+	//проблема е, че ще се обърне реда на елементите защото структурата е стек
 	/*
 	StackElement* toCopy = ls.top;
 	while(toCopy != NULL) {
@@ -119,10 +127,11 @@ LinkedStack<T>::LinkedStack(LinkedStack<T> const& ls)
 		toCopy = toCopy->next;
 	}
 	*/
+		
+	//
 	*this = ls;
 	// this->operator=(ls);
 	// operator=(ls);
-
 }
 
 template <typename T>
