@@ -140,18 +140,19 @@ LinkedStack<T>& LinkedStack<T>::operator=(LinkedStack<T> const& ls) {
 		// !!! ~LinkedStack();
 		while (!empty()) pop();
 
-		StackElement<T>* toCopy = ls.top;
-		StackElement<T> *copy, *lastCopied = NULL;
+		StackElement<T>* toCopy = ls.top; //указател към елемента, който ще копираме
+		StackElement<T>* copy; //указател към нов елемент, който трябва да инициализираме и поставим в новия стек
+		StackElement<T>* lastCopied = NULL; //указател към последно поставеният елемент за да можем да навържем следващия
 		while (toCopy != NULL) {
 			copy = new StackElement<T>;
 
-			if (top == NULL)
+			if (top == NULL) //ако стека е празен насочваме топ към новия елемент
 				top = copy;
 
 			copy->data = toCopy->data;
 
-			if (lastCopied != NULL)
-				lastCopied->next = copy;
+			if (lastCopied != NULL) //ако вече сме откопирали елемент
+				lastCopied->next = copy; //насочваме го към новия
 
 			// преместване на указателите
 			lastCopied = copy;
