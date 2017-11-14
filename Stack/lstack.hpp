@@ -17,6 +17,7 @@ template <typename T>
 class LinkedStack{
 private:
 	StackElement<T>* top; //самата структура от данни съхранява само указател към края на веригата
+	void copy(LinkedStack const&);
 
 public:
 	// създаване на празен стек
@@ -109,6 +110,30 @@ LinkedStack<T>::~LinkedStack() {
 }
 
 template <typename T>
+void LinkedStack<T>::copy(LinkedStack const& ls)
+{
+	StackElement<T>* toCopy = ls.top; //указател към елемента, който ще копираме
+	StackElement<T>* copy; //указател към нов елемент, който трябва да инициализираме и поставим в новия стек
+	StackElement<T>* lastCopied = NULL; //указател към последно поставеният елемент за да можем да навържем следващия
+	while (toCopy != NULL) {
+		copy = new StackElement<T>;
+
+		if (top == NULL) //ако стека е празен насочваме топ към новия елемент
+			top = copy;
+
+		copy->data = toCopy->data;
+
+		if (lastCopied != NULL) //ако вече сме откопирали елемент
+			lastCopied->next = copy; //насочваме го към новия
+
+		// преместване на указателите
+		lastCopied = copy;
+		toCopy = toCopy->next;
+	}
+	lastCopied->next = NULL;	
+}
+
+template <typename T>
 LinkedStack<T>::LinkedStack(LinkedStack<T> const& ls)
 	: top(NULL) {
 	//това не работи защото не можем да правим ls.pop() при положение, че ls e const
@@ -128,8 +153,7 @@ LinkedStack<T>::LinkedStack(LinkedStack<T> const& ls)
 	}
 	*/
 		
-	//
-	*this = ls;
+	copy(ls);
 	// this->operator=(ls);
 	// operator=(ls);
 }
@@ -138,27 +162,8 @@ template <typename T>
 LinkedStack<T>& LinkedStack<T>::operator=(LinkedStack<T> const& ls) {
 	if (this != &ls) {
 		// !!! ~LinkedStack();
-		while (!empty()) pop();
-
-		StackElement<T>* toCopy = ls.top; //указател към елемента, който ще копираме
-		StackElement<T>* copy; //указател към нов елемент, който трябва да инициализираме и поставим в новия стек
-		StackElement<T>* lastCopied = NULL; //указател към последно поставеният елемент за да можем да навържем следващия
-		while (toCopy != NULL) {
-			copy = new StackElement<T>;
-
-			if (top == NULL) //ако стека е празен насочваме топ към новия елемент
-				top = copy;
-
-			copy->data = toCopy->data;
-
-			if (lastCopied != NULL) //ако вече сме откопирали елемент
-				lastCopied->next = copy; //насочваме го към новия
-
-			// преместване на указателите
-			lastCopied = copy;
-			toCopy = toCopy->next;
-		}
-		lastCopied->next = NULL;
+		while (!empty()) pop();//премахваме клетките от стека
+		copy(ls);
 	}
 	return *this;
 }
